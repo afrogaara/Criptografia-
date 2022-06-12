@@ -1,0 +1,19 @@
+Cifra por substituição:
+	ex: cifra de César
+
+Funções Hash:
+	ex: Algoritmo pegar a informação e transformar em dados de comprimento váriavel em dados de comprimento fixo.
+
+
+Criptografia de chave simétrica:
+	- > chave única, compartilhada ou secret 
+	ex: roteador. Com a senha do roteador a mensagem é criptografada e ao chegar no roteador é descriptografada. 
+
+
+Criptografia de chave assimétrica: 
+	- > As duas partes tem a senha. 
+	ex: Usadas por site que possuem SSL, por exemplo, que possuirá uma chave pública e uma chave privada. 
+Chave pública é utilizada pelos usuários para criptografar a mensagem, e o servidor que possui a chave privada vai descriptografar 
+
+Por que utilizar Criptografia? 
+- > Interceptar dados é fácil e sempre foi desde antes de 2000 anos antes de cristo e na segunda guerra mundial. O problema é quando os dados eles podem ser interceptados e lidos.  
