@@ -1,13 +1,31 @@
 Cifra por substituição:
 	ex: cifra de César
+	- > https://www.rot-n.com/ 
+	- > https://www.base64encode.org/
+
 
 Funções Hash:
 	ex: Algoritmo pegar a informação e transformar em dados de comprimento váriavel em dados de comprimento fixo.
+	ou seja, não importa a entrada a saída será a mesma. 
+	- > http://www.md5.cz/ encode md5
+	- > https://www.md5online.org/md5-decrypt.html decode md6
+	
+	É possível utilizar um "salt" nas senhas hash. 
+	Usuário: afrogaara
+	senha: 12345
+	
+	12345 em hash - > e10adc3949ba59abbe56e057f20f883e
+	hash + salt = hash + nome de usuário 
+	
+	Ficando: 
+	e10adc3949ba59abbe56e057f20f883e + afrogaara = 2a8cacac48539bdeb1e8183c3df8adf0 
+	afrogaara + e10adc3949ba59abbe56e057f20f883e = fa6a1f0d55d9ebd161ee563ae267843f
 
-
+			  
 Criptografia de chave simétrica:
 	- > chave única, compartilhada ou secret 
 	ex: roteador. Com a senha do roteador a mensagem é criptografada e ao chegar no roteador é descriptografada. 
+
 
 
 Criptografia de chave assimétrica: 
@@ -15,5 +33,79 @@ Criptografia de chave assimétrica:
 	ex: Usadas por site que possuem SSL, por exemplo, que possuirá uma chave pública e uma chave privada. 
 Chave pública é utilizada pelos usuários para criptografar a mensagem, e o servidor que possui a chave privada vai descriptografar 
 
+
+
 Por que utilizar Criptografia? 
 - > Interceptar dados é fácil e sempre foi desde antes de 2000 anos antes de cristo e na segunda guerra mundial. O problema é quando os dados eles podem ser interceptados e lidos.  
+
+
+----------------------------------
+Quebrando senhas com Hashcat: 
+	O que é HASH  
+	- > As senhas não são salvas em texto puro, são salvas em HASH. É um formato de como as senhas são salvas em um banco de dados/base de dados relacional. 
+	- > É uma função matemática que recebe uma entrada variável no qual a saída é predeterminada.
+	- > HASH são uniderecionais, caminho sem volta (não tem como transformar hash em caracteres novamente)
+	
+	Como funciona md5? 
+		- >  Vai receber uma entrada variável e gerar HASH de 160 bits (32 caracteres) 
+				8 bits ------ > 1 byte 
+			
+				160 bits ----- > x 
+				
+				x = 32 bytes ( Toda saída terá 32 caracteres )
+		- > http://www.md5.cz/ 
+		- > https://www.md5online.org/md5-decrypt.html
+Hashcat -h 
+
+Mode
+hashcat -a0 (ataque de dicionário) wordlist.txt
+hashcat -a 3 (ataque de força bruta)
+
+Hashs modes
+hashcat -m0 hash-type MD5 (especifique o arquivo com a hash)
+hashcat -m 900 hash-type MD4
+
+- > hashcat vai pegar as palavras -a0 (de um decionário que foi passado) e converter em hash e comparar com o arquivo que possui hash que será atacado 
+exemplos: 
+	segredo - 40847951488f9395f242f30ed27cdc47
+	
+	nano ataque.txt ( arquivo a ser atacado ) 
+	40847951488f9395f242f30ed27cdc47
+	
+	nano lista.txt ( arquivo com lista de palavras )
+	segredo 
+	
+	hashcat -a0 lista.txt -m0 ataque.txt
+
+hashcat -a 3 ( força bruta )
+
+l 26 - > letras minusculas  
+u 26 - > letras maiusculas 
+d 0 9 - > 10 números 
+s 33  - > caracteres especiais 
+
+supondo que a senha tem 3 digítos 
+
+hashcat -a3 -m0 ataque.txt (é eficiênte)
+
+_ _ _ = 26 + 26 + 10 + 33 = 95 combinações possiveis para 1 digíto
+95 95 95 = 857,375
+
+
+E se fosse uma senha de? 7 digítos ? 
+
+hashcat -a3 -m0 ataque.txt (não é mais eficiênte) 
+
+_ _ _ _ _ _ _ = 95 + 95 + 95 + 95 + 95 + 95 + 95 = 665 
+O que fazer ? 
+_ = ?l (26 letras minusculas) "hascat utilize apenas letras minusculas no primeiro digíto
+
+hashcat -a3 -m0 ataque.txt ?l?l?l?l?l?l?l
+?l?l?l?l?l?l?l = 26*26*26*26*26*26*26 = 8,031,810,176 (8bilhões de combinações, é eficiênte) 
+
+Criando váriavel no hashcat: 
+
+-> hashcat -1 ?l?s (supondo que você sabe que o ultimo digíto seja letra minusculas ou caractere especial)
+- > supondo que a senha seja de 4 digítos:
+- > supondo que você sabe que a primeira letra é maiscula e as 2 letras seguintes são minusculas:
+	- > hashcat -a3 -m0 ataque.txt ?u?l?l?1
