@@ -1,4 +1,3 @@
- ----------------------------------
    Brutalforce em formulários web Usando Hydra:
    site: acunetix 
    - > http://testphp.vulnweb.com/userinfo.php (servidor que vamos atacar)
@@ -60,16 +59,7 @@ unane - > depende de como o site passa as informações de usuário e senha pro 
 S=especificar algo que tenha na url após logado com login e senha 
 -V modo verbose 
 
-
-
-
-Evitando ataque de brutalforce em serviços: 
-
-- > Em primeiro lugar, serviços por mais atualizados que estejam estão vulneraveis a ataque de brutalforce
-- > Senhas fortes 
-- > Deixar portas restritas pra um determinado número de IP
-- > IDS OR IPS 
-- > Políticas de seguranças que restringem o ip após uma determinada tentativa de erros 
+---------------------------------------------------
 
 Evitando ataque de brutalforce em formulários web:
 
